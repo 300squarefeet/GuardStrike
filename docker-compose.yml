@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  guardstrike:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: guardstrike:latest
+    container_name: guardstrike-pentest
+    
+    # Environment variables (use .env file)
+    env_file:
+      - .env
+    
+    # Volume mounts for persistence
+    volumes:
+      # Reports directory (persistent output)
+      - ./reports:/guardstrike/reports
+      
+      # Logs directory
+      - ./logs:/guardstrike/logs
+      
+      # Custom configuration (optional)
+      - ./config:/guardstrike/config
+      
+      # Custom workflows (optional)
+      - ./workflows:/guardstrike/workflows
+    
+    # Network configuration
+    network_mode: bridge
+    
+    # Resource limits (optional - adjust based on your needs)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 4G
+    #     reservations:
+    #       cpus: '1'
+    #       memory: 2G
+    
+    # Restart policy
+    restart: "no"
+    
+    # Interactive mode
+    stdin_open: true
+    tty: true
+
+# Optional: Named volumes for better management
+# volumes:
+#   guardstrike_reports:
+#   guardstrike_logs:

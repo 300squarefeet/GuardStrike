@@ -1,0 +1,188 @@
+# GuardStrike Configuration File
+# Default settings for AI-powered penetration testing
+
+# AI Configuration
+ai:
+  # Active Provider: gemini, openai, claude, openrouter, requesty
+  provider: openai
+
+  # Cross-provider fallback: ordered provider names tried when the primary
+  # fails on a transient error or model-not-found (auth errors are surfaced).
+  fallback: []                  # e.g. [openai, gemini]
+  # Per-run budgets (null disables). Warn at 80%, stop gracefully at 100%.
+  token_budget: null            # e.g. 2000000  — cumulative token cap
+  max_cost_usd: null            # e.g. 5.0       — cumulative estimated USD cap
+
+  # Gemini Configuration
+  gemini:
+    model: gemini-2.5-pro
+    api_key: null  # Or set GOOGLE_API_KEY environment variable
+  
+  # OpenAI Configuration  
+  openai:
+    model: gpt-4o
+    api_key: null  # Or set OPENAI_API_KEY environment variable
+  
+  # Claude (Anthropic) Configuration
+  claude:
+    model: claude-sonnet-4-6
+    api_key: null  # Or set ANTHROPIC_API_KEY environment variable
+  
+  # OpenRouter Configuration
+  openrouter:
+    model: anthropic/claude-3.5-sonnet
+    api_key: null  # Or set OPENROUTER_API_KEY environment variable
+  
+  # Requesty Configuration
+  requesty:
+    model: openai/gpt-4o-mini
+    api_key: null  # Or set REQUESTY_API_KEY environment variable
+
+  # Antigravity Configuration
+  antigravity:
+    base_url: http://localhost:3000/v1   # local Antigravity OpenAI-compatible proxy
+    model: gemini-3-pro
+    # No API key needed — the proxy holds your Antigravity OAuth session.
+    # Run a proxy (e.g. openai-proxy-for-antigravity) before selecting this provider.
+    # api_key: null                      # only if your proxy enforces one (env: ANTIGRAVITY_API_KEY)
+
+  # General AI Settings (applied to all providers)
+  temperature: 0.2
+  max_tokens: 8000
+  timeout: 60
+  rate_limit: 2
+
+  # Model Pricing (USD per 1 million tokens)
+  # Update these values whenever a provider changes their pricing.
+  # Format:  <model-name>: {prompt: <cost>, completion: <cost>}
+  pricing:
+    # OpenAI
+    gpt-4o:               { prompt: 5.00,  completion: 15.00 }
+    gpt-4o-mini:          { prompt: 0.15,  completion: 0.60  }
+    gpt-4-turbo:          { prompt: 10.00, completion: 30.00 }
+    gpt-3.5-turbo:        { prompt: 0.50,  completion: 1.50  }
+    # Anthropic
+    claude-opus-4-8:      { prompt: 5.00,  completion: 25.00 }
+    claude-sonnet-4-6:    { prompt: 3.00,  completion: 15.00 }
+    claude-haiku-4-5:     { prompt: 1.00,  completion: 5.00  }
+    # Google Gemini
+    gemini-2.5-pro:       { prompt: 1.25,  completion: 5.00  }
+    gemini-2.0-flash:     { prompt: 0.10,  completion: 0.40  }
+    gemini-1.5-pro:       { prompt: 3.50,  completion: 10.50 }
+    # OpenRouter (model names as returned by the API)
+    anthropic/claude-3.5-sonnet: { prompt: 3.00, completion: 15.00 }
+    openai/gpt-4o:               { prompt: 5.00, completion: 15.00 }
+    # Requesty (provider/model naming, OpenAI-compatible)
+    openai/gpt-4o-mini:          { prompt: 0.15, completion: 0.60  }
+
+
+# Tool-result cache (opt-in). Stale scan data can mislead — off by default.
+cache:
+  enabled: false      # cache successful tool outputs on disk
+  ttl_hours: 24       # entries older than this are ignored
+  # dir: ~/.guardstrike/cache
+  # NOTE: key = (tool, target, step params); it does NOT include tools.<name> config.
+  # Change tool config -> run `guardstrike cache clear` or use --no-cache.
+
+# Penetration Testing Settings
+pentest:
+  # Safety mode prevents automatic execution of risky commands
+  safe_mode: true
+  
+  # Maximum number of tools to run in parallel
+  max_parallel_tools: 3
+  
+  # Require user confirmation before executing any tool
+  require_confirmation: true
+  
+  # Maximum scan depth for recursive operations
+  max_depth: 3
+  
+  # Request timeout for tools (seconds)
+  tool_timeout: 300
+
+# Output Settings
+output:
+  # Default format: markdown, html, json
+  format: markdown
+  
+  # Save path for reports and outputs
+  save_path: ./reports
+  
+  # Include AI reasoning in reports
+  include_reasoning: true
+  
+  # Verbosity level: quiet, normal, verbose, debug
+  verbosity: quiet
+
+# Scope Validation
+scope:
+  # Blacklisted IP ranges (CIDR notation)
+  blacklist:
+    - 127.0.0.0/8
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+  
+  # Require explicit scope file for scanning
+  require_scope_file: false
+  
+  # Maximum number of targets per scan
+  max_targets: 100
+
+# Tool Configuration
+tools:
+  nmap:
+    enabled: true
+    default_args: "-sV -sC"
+    timing: T4
+    
+  httpx:
+    enabled: true
+    threads: 50
+    timeout: 10
+    
+  subfinder:
+    enabled: true
+    sources: ["crtsh", "hackertarget"]
+    
+  nuclei:
+    enabled: true
+    severity: ["critical", "high", "medium"]
+    templates_path: ~/nuclei-templates
+
+# Workflow Settings
+workflows:
+  # Default workflow timeout (seconds)
+  timeout: 3600
+  
+  # Save intermediate results
+  save_intermediate: true
+  
+  # Resume from checkpoint on failure
+  resume_on_failure: true
+
+# Logging
+logging:
+  # Enable audit logging
+  enabled: true
+
+  # Log file path
+  path: ./logs/guardstrike.log
+
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: INFO
+
+  # Log AI decisions
+  log_ai_decisions: true
+
+integrations:
+  defectdojo:
+    enabled: false                       # opt-in; POST results to DefectDojo
+    base_url: null                       # e.g. https://defectdojo.example.com
+    engagement_id: null                  # numeric engagement to import into
+    scan_type: "Generic Findings Import"
+    # API token via env: DEFECTDOJO_API_TOKEN
+  slack:
+    enabled: false                       # opt-in; post a summary to Slack/Discord
+    # webhook via env: GUARDSTRIKE_SLACK_WEBHOOK
