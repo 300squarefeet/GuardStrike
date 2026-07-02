@@ -2,14 +2,31 @@
 guardstrike models - List available AI models
 """
 
+import typer
 from rich.console import Console
 from rich.table import Table
 
 console = Console()
 
 
-def list_models_command():
-    """List available AI models across all providers"""
+def list_models_command(
+    live: bool = typer.Option(
+        False,
+        "--live",
+        "-L",
+        help="Fetch the live model list from a gateway provider (9router / antigravity / openai_compatible)",
+    ),
+    provider: str = typer.Option(
+        "9router", "--provider", "-p", help="Gateway provider to query when --live"
+    ),
+    config_file: str = typer.Option(
+        "config/guardstrike.yaml", "--config", "-c", help="Configuration file path"
+    ),
+):
+    """List available AI models across all providers (or live from a gateway with --live)."""
+    if live:
+        _list_live_models(provider, config_file)
+        return
 
     table = Table(title="Available AI Models")
 
@@ -90,3 +107,40 @@ def list_models_command():
     console.print(
         "[dim]  GOOGLE_API_KEY, OPENAI_API_KEY, ANTHROPIC_API_KEY, OPENROUTER_API_KEY, REQUESTY_API_KEY[/dim]"
     )
+    console.print(
+        "[dim]Tip: `guardstrike models --live` lists ALL models from your local 9Router gateway.[/dim]"
+    )
+
+
+def _list_live_models(provider_name: str, config_file: str) -> None:
+    """Fetch and print the full live model catalog from a gateway provider."""
+    from guardstrike.ai.providers import get_provider
+    from guardstrike.utils.helpers import load_config
+
+    cfg = load_config(config_file)
+    cfg = {**cfg, "ai": {**cfg.get("ai", {}), "provider": provider_name}}
+    try:
+        prov = get_provider(cfg)
+        fetch = getattr(prov, "list_models", None)
+        if fetch is None:
+            console.print(
+                f"[red]Provider '{provider_name}' does not support live model listing.[/red]"
+            )
+            raise typer.Exit(1)
+        models = fetch()
+    except typer.Exit:
+        raise
+    except Exception as e:
+        console.print(f"[red]Could not reach the {provider_name} gateway:[/red] {e}")
+        console.print(
+            f"[dim]Start the {provider_name} gateway first "
+            f"(9Router default: http://localhost:20128).[/dim]"
+        )
+        raise typer.Exit(1)
+
+    table = Table(title=f"{provider_name} — live models ({len(models)})")
+    table.add_column("Model ID", style="cyan")
+    for m in models:
+        table.add_row(m)
+    console.print(table)
+    console.print(f"\n[dim]Use with:[/dim] --provider {provider_name} --model <id>")

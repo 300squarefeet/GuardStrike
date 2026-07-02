@@ -35,7 +35,7 @@
 
 ### 🤖 Multi-Provider AI Intelligence
 
-- **9 AI Providers Supported**: OpenAI (GPT-4o), Anthropic (Claude), Google (Gemini), OpenRouter, **Requesty**, **Ollama (local)**, **OpenAI-compatible (vLLM, LM Studio, Together, Groq)**, **Antigravity (keyless — via a local OpenAI-compatible proxy)**, **9Router (keyless — local gateway to 40+ models with free tiers; `guardstrike models` lists the catalog)**
+- **9 AI Providers Supported**: OpenAI (GPT-4o), Anthropic (Claude), Google (Gemini), OpenRouter, **Requesty**, **Ollama (local)**, **OpenAI-compatible (vLLM, LM Studio, Together, Groq)**, **Antigravity (keyless — via a local OpenAI-compatible proxy)**, **9Router (keyless — local gateway to 40+ providers / 100+ models with free tiers; `guardstrike models --live` lists the full live catalog straight from your gateway)**
 - **Cross-Provider Fallback + Budget Caps**: transient / model-not-found errors fail over across the configured provider chain; a per-run token and USD budget stops the run cleanly before overspend
 - **Plugin Provider Contract**: Third-party providers ship via `[project.entry-points."guardstrike.providers"]` — no fork required
 - **Multi-Agent Architecture**: Specialized AI agents (Planner, Tool Selector, Analyst, Reporter) plus debate triage roles (Red Advocate, Blue Advocate, Judge) and Visual Triage

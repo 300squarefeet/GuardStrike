@@ -171,5 +171,30 @@ class OpenAICompatibleProvider(BaseProvider):
     def get_model_name(self) -> str:
         return self.model_name
 
+    def list_models(self, timeout: int = 10) -> list[str]:
+        """Fetch the live model catalog from the gateway's OpenAI-compatible
+        ``/models`` endpoint. Returns a sorted list of model IDs. Raises on
+        transport error — the caller decides how to surface an unreachable
+        gateway.
+        """
+        import json
+        import urllib.request
+
+        url = self.base_url.rstrip("/") + "/models"
+        headers = {}
+        if self.api_key and self.api_key != "EMPTY":
+            headers["Authorization"] = f"Bearer {self.api_key}"
+        req = urllib.request.Request(url, headers=headers, method="GET")
+        with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310 — operator URL
+            payload = json.loads(resp.read().decode("utf-8"))
+        rows = payload.get("data", payload) if isinstance(payload, dict) else payload
+        ids: list[str] = []
+        for m in rows or []:
+            if isinstance(m, dict) and m.get("id"):
+                ids.append(str(m["id"]))
+            elif isinstance(m, str):
+                ids.append(m)
+        return sorted(set(ids))
+
     def is_available(self) -> bool:
         return LANGCHAIN_AVAILABLE and bool(self.base_url) and self.backend is not None
