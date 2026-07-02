@@ -156,6 +156,12 @@ tools:
     severity: ["critical", "high", "medium"]
     templates_path: ~/nuclei-templates
 
+  resilience:
+    enabled: true        # retry + recover transient tool failures (timeout / rate-limit / WAF / connection)
+    max_retries: 2       # extra attempts after the first
+    backoff_base: 2.0    # exponential backoff multiplier
+    backoff_cap: 30.0    # max seconds between attempts
+
 # Workflow Settings
 workflows:
   # Default workflow timeout (seconds)

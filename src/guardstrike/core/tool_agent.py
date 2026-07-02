@@ -3,6 +3,7 @@ Tool Selector Agent
 Selects appropriate pentesting tools and configures them
 """
 
+import asyncio
 from typing import Any
 
 from guardstrike.ai.prompt_templates import (
@@ -409,26 +410,63 @@ class ToolAgent(BaseAgent):
             self.logger.info(f"Tool {tool_name} served from cache")
             return {**cached, "tool": tool_name, "cached": True}
 
-        try:
-            result = await tool.execute(target, stream_callback=stream_callback, **kwargs)
+        from guardstrike.core.memory import ToolExecution
+        from guardstrike.core.tool_recovery import (
+            adjust_params,
+            backoff_delay,
+            classify_error,
+            is_retriable,
+        )
+
+        res_cfg = self.config.get("tools", {}).get("resilience", {}) or {}
+        enabled = res_cfg.get("enabled", True)
+        max_retries = int(res_cfg.get("max_retries", 2)) if enabled else 0
+        base = float(res_cfg.get("backoff_base", 2.0))
+        cap = float(res_cfg.get("backoff_cap", 30.0))
+
+        attempt = 0
+        call_kwargs = dict(kwargs)
+        while True:
+            try:
+                result = await tool.execute(target, stream_callback=stream_callback, **call_kwargs)
+            except Exception as e:
+                self.logger.error(f"Unexpected error in execute_tool({tool_name}): {e}")
+                result = {"success": False, "error": str(e), "raw_output": "", "exit_code": -1}
 
             if result.get("success"):
-                # Record successful execution in memory
-                from guardstrike.core.memory import ToolExecution
-
-                execution = ToolExecution(
-                    tool=tool_name,
-                    command=result.get("command", ""),
-                    target=target,
-                    timestamp=result.get("timestamp", ""),
-                    exit_code=result.get("exit_code", 0),
-                    output=result.get("raw_output", ""),
-                    duration=result.get("duration", 0.0),
+                self.memory.add_tool_execution(
+                    ToolExecution(
+                        tool=tool_name,
+                        command=result.get("command", ""),
+                        target=target,
+                        timestamp=result.get("timestamp", ""),
+                        exit_code=result.get("exit_code", 0),
+                        output=result.get("raw_output", ""),
+                        duration=result.get("duration", 0.0),
+                    )
                 )
-                self.memory.add_tool_execution(execution)
+                out = {
+                    "success": True,
+                    "skipped": result.get("skipped", False),
+                    "tool": tool_name,
+                    "command": result.get("command", ""),
+                    "parsed": result.get("parsed", {}),
+                    "raw_output": result.get("raw_output", ""),
+                    "duration": result.get("duration", 0.0),
+                    "exit_code": result.get("exit_code", -1),
+                    "error": result.get("error"),
+                    "cached": False,
+                    "attempts": attempt + 1,
+                    "recovered": attempt > 0,
+                }
+                self.cache.put(tool_name, target, kwargs, out)  # key = ORIGINAL kwargs
+                return out
 
-            out = {
-                "success": result.get("success", False),
+            etype = classify_error(
+                result.get("exit_code"), result.get("raw_output", ""), result.get("error")
+            )
+            failure = {
+                "success": False,
                 "skipped": result.get("skipped", False),
                 "tool": tool_name,
                 "command": result.get("command", ""),
@@ -438,21 +476,15 @@ class ToolAgent(BaseAgent):
                 "exit_code": result.get("exit_code", -1),
                 "error": result.get("error"),
                 "cached": False,
+                "error_type": etype,
+                "attempts": attempt + 1,
+                "recovered": False,
             }
-            if out["success"]:
-                self.cache.put(tool_name, target, kwargs, out)
-            return out
-
-        except Exception as e:
-            self.logger.error(f"Unexpected error in execute_tool({tool_name}): {e}")
-            return {
-                "success": False,
-                "skipped": False,
-                "tool": tool_name,
-                "error": str(e),
-                "raw_output": "",
-                "cached": False,
-            }
+            if attempt >= max_retries or not is_retriable(etype):
+                return failure
+            await asyncio.sleep(backoff_delay(attempt, etype, base, cap))
+            call_kwargs = adjust_params(tool_name, etype, call_kwargs)
+            attempt += 1
 
     def _detect_target_type(self, target: str) -> str:
         """Detect if target is IP, domain, or URL"""
