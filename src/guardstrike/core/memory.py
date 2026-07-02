@@ -38,6 +38,9 @@ class Finding:
     execution_id: str | None = None  # Link to ToolExecution
     raw_evidence: str | None = None  # Full command output section
     merged_from: list[str] = field(default_factory=list)  # "tool:execution_id" of merged duplicates
+    exploitability: float | None = None  # CVSS-vector exploitability sub-score
+    exploit_available: bool | None = None  # public exploit reference found (NVD)
+    exploit_refs: list[str] = field(default_factory=list)  # exploit reference URLs
 
     @property
     def duplicate_count(self) -> int:
