@@ -197,3 +197,8 @@ integrations:
   slack:
     enabled: false                       # opt-in; post a summary to Slack/Discord
     # webhook via env: GUARDSTRIKE_SLACK_WEBHOOK
+
+exploit_intel:
+  enabled: false       # opt-in; queries NVD for public-exploit references (network + rate-limited)
+  ttl_hours: 168       # cache CVE→exploit lookups for a week
+  # NVD API key via env: NVD_API_KEY (optional — raises the NVD rate limit)
