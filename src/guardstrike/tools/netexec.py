@@ -1,8 +1,8 @@
 """
-NetExec / CrackMapExec wrapper — Active Directory swiss-army knife.
+NetExec wrapper — Active Directory swiss-army knife.
 
-NetExec (``nxc``) is the actively-maintained CrackMapExec successor.
-Supports SMB / WinRM / LDAP / SSH / MSSQL across Windows hosts.
+NetExec (``netexec`` / ``nxc``) is an actively-maintained network execution
+tool. Supports SMB / WinRM / LDAP / SSH / MSSQL across Windows hosts.
 
 Risk class: ``intrusive``. Operator must supply credentials and target
 range; safe_mode in ``pentest`` config blocks destructive actions like
@@ -17,18 +17,18 @@ from typing import Any
 from guardstrike.tools.base_tool import BaseTool
 
 
-class CrackMapExecTool(BaseTool):
+class NetExecTool(BaseTool):
     def __init__(self, config: dict[str, Any]) -> None:
         super().__init__(config)
-        # Modern binary is ``nxc``; fall back to legacy ``crackmapexec``.
-        self.tool_name = "nxc"
+        # NetExec ships both ``netexec`` and ``nxc`` console scripts.
+        self.tool_name = "netexec"
 
     def get_command(self, target: str, **kwargs: Any) -> list[str]:
-        cfg = self.config.get("tools", {}).get("crackmapexec", {})
+        cfg = self.config.get("tools", {}).get("netexec", {})
         protocol = kwargs.get("protocol", cfg.get("protocol", "smb"))
         action = kwargs.get("action", cfg.get("action", "enum"))
 
-        cmd: list[str] = ["nxc", protocol, target]
+        cmd: list[str] = ["netexec", protocol, target]
 
         username = kwargs.get("username", cfg.get("username"))
         password = kwargs.get("password", cfg.get("password"))

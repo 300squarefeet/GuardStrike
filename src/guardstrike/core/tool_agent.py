@@ -70,7 +70,7 @@ TOOL_REGISTRY: dict[str, str] = {
     "apkleaks": "guardstrike.tools.apkleaks:ApkLeaksTool",
     "objection": "guardstrike.tools.objection_runtime:ObjectionRuntimeTool",
     # Phase 4 — Active Directory (B8). Authorized AD engagements only.
-    "crackmapexec": "guardstrike.tools.crackmapexec:CrackMapExecTool",
+    "netexec": "guardstrike.tools.netexec:NetExecTool",
     "bloodhound": "guardstrike.tools.bloodhound:BloodHoundTool",
     "kerbrute": "guardstrike.tools.kerbrute:KerbruteTool",
     "impacket-secretsdump": "guardstrike.tools.impacket_secretsdump:ImpacketSecretsdumpTool",
@@ -145,7 +145,7 @@ TOOL_RISK_CLASS: dict[str, str] = {
     # ``impacket-secretsdump`` runs DCSync — destructive (event-logged).
     # Spray + cred validation = intrusive. Enum-only is also intrusive
     # because it generates auth events.
-    "crackmapexec": "intrusive",
+    "netexec": "intrusive",
     "bloodhound": "intrusive",
     "kerbrute": "intrusive",
     "impacket-secretsdump": "destructive",

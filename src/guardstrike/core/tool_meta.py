@@ -63,7 +63,10 @@ TOOL_META: dict[str, dict[str, str]] = {
     "objection": {"description": "Runtime mobile exploration (Frida)", "category": "mobile"},
     # ad / network auth
     "bloodhound": {"description": "Active Directory attack-path mapping", "category": "ad"},
-    "crackmapexec": {"description": "Network/AD post-exploitation", "category": "ad"},
+    "netexec": {
+        "description": "NetExec — network/AD post-exploitation over SMB/WinRM/LDAP",
+        "category": "ad",
+    },
     "kerbrute": {"description": "Kerberos user/password bruteforce", "category": "ad"},
     "impacket-secretsdump": {"description": "Dump AD/host secrets", "category": "ad"},
     # ai / llm

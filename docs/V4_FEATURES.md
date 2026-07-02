@@ -353,7 +353,7 @@ corpus.
 
 | ID | Category | Tools | Workflow |
 |---|---|---|---|
-| B8 | Active Directory | crackmapexec, bloodhound, kerbrute, impacket-secretsdump | `ad_assessment.yaml` |
+| B8 | Active Directory | netexec, bloodhound, kerbrute, impacket-secretsdump | `ad_assessment.yaml` |
 | B9 | Mobile Android | mobsf, apkleaks, objection_runtime | `mobile_android.yaml` |
 | B10 | API fuzzers | schemathesis, restler, cariddi | `api_pentest_v2.yaml` |
 | B11 | SAST + secrets | semgrep, trufflehog, dependency-check | `sast_review.yaml` |

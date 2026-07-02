@@ -70,7 +70,7 @@ In-tree wins on collisions — plugins cannot silently override core.
 | **Burp/ZAP** | zap, burp |
 | **LLM Red-Team** | garak, pyrit, prompt_fuzz |
 | **Mobile Android** | mobsf, apkleaks, objection |
-| **Active Directory** | crackmapexec, bloodhound, kerbrute, impacket-secretsdump |
+| **Active Directory** | netexec, bloodhound, kerbrute, impacket-secretsdump |
 | **Vision Evidence** | playwright_screenshot |
 
 ## CLI surfaces (v4)

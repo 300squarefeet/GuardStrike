@@ -67,7 +67,7 @@
 | **Burp/ZAP Bridge (B13)** | zap, burp |
 | **LLM Red-Team (B12)** | garak, pyrit, prompt_fuzz |
 | **Mobile Android (B9)** | mobsf, apkleaks, objection |
-| **Active Directory (B8)** | crackmapexec, bloodhound, kerbrute, impacket-secretsdump |
+| **Active Directory (B8)** | netexec, bloodhound, kerbrute, impacket-secretsdump |
 | **Vision Evidence (A3)** | playwright_screenshot |
 
 ### 📊 Enhanced Evidence Capture
@@ -644,7 +644,7 @@ guardstrike/
 
 | ID | Category | Tools Added |
 |---|---|---|
-| B8 | Active Directory | crackmapexec, bloodhound, kerbrute, impacket-secretsdump |
+| B8 | Active Directory | netexec, bloodhound, kerbrute, impacket-secretsdump |
 | B9 | Mobile Android | mobsf, apkleaks, objection |
 | B10 | API fuzzers | schemathesis, restler, cariddi |
 | B11 | SAST + secrets | semgrep, trufflehog, dependency-check |

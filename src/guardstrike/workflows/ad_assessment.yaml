@@ -15,7 +15,7 @@ steps:
 
   - id: cme_enum
     type: tool
-    tool: crackmapexec
+    tool: netexec
     depends_on: [kerb_userenum]
     objective: "Authenticated SMB enum: shares, sessions, password policy"
     parameters:
