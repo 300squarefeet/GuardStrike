@@ -433,6 +433,16 @@ class ToolAgent(BaseAgent):
                 self.logger.error(f"Unexpected error in execute_tool({tool_name}): {e}")
                 result = {"success": False, "error": str(e), "raw_output": "", "exit_code": -1}
 
+            if not isinstance(result, dict):
+                # Contract-violating (plugin) tool returned a non-dict — keep the
+                # "never raises" guarantee by coercing to a failure result.
+                result = {
+                    "success": False,
+                    "error": "tool returned a non-dict result",
+                    "raw_output": "",
+                    "exit_code": -1,
+                }
+
             if result.get("success"):
                 self.memory.add_tool_execution(
                     ToolExecution(

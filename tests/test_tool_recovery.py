@@ -42,3 +42,8 @@ def test_adjust_params_downshift():
     assert tr.adjust_params("nmap", tr.TIMEOUT, {})["timing"] == "-T2"
     # non-retriable-ish / threads==1 stays >= 1
     assert tr.adjust_params("httpx", tr.TIMEOUT, {"threads": 1})["threads"] == 1
+
+
+def test_permission_wins_over_incidental_timeout():
+    # Reordered markers: a real permission failure isn't masked by an echoed "timeout: 30".
+    assert tr.classify_error(1, "timeout: 30\npermission denied", None) == tr.PERMISSION

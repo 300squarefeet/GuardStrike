@@ -113,3 +113,13 @@ async def test_disabled_single_attempt(monkeypatch):
     r = await a.execute_tool("nmap", "example.com")
     assert r["success"] is False and r["attempts"] == 1
     assert len(tool.calls) == 1
+
+
+@pytest.mark.asyncio
+async def test_non_dict_result_does_not_raise(monkeypatch):
+    a = _agent()
+    tool = _ScriptedTool([None])  # contract-violating plugin tool returns non-dict
+    _wire(monkeypatch, a, tool)
+    r = await a.execute_tool("nmap", "example.com")
+    assert r["success"] is False and "non-dict" in (r.get("error") or "")
+    assert r["attempts"] == 1

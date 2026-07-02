@@ -26,8 +26,6 @@ _MARKERS: list[tuple[str, str]] = [
     ("forbidden", WAF_BLOCK),
     ("blocked by", WAF_BLOCK),
     ("waf", WAF_BLOCK),
-    ("timed out", TIMEOUT),
-    ("timeout", TIMEOUT),
     ("connection refused", CONNECTION),
     ("connection reset", CONNECTION),
     ("unreachable", CONNECTION),
@@ -36,6 +34,8 @@ _MARKERS: list[tuple[str, str]] = [
     ("not permitted", PERMISSION),
     ("command not found", NOT_FOUND),
     ("no such file", NOT_FOUND),
+    ("timed out", TIMEOUT),
+    ("timeout", TIMEOUT),
 ]
 
 
