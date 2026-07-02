@@ -4,7 +4,7 @@ from guardstrike.cli.main import app
 
 runner = CliRunner()
 
-BANNER_MARK = "zakirkun/guardstrike"
+BANNER_MARK = "300squarefeet/GuardStrike"
 
 
 def test_help_has_no_banner():

@@ -10,7 +10,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-**GuardStrike** is an enterprise-grade AI-powered penetration testing automation framework that combines multiple AI providers (OpenAI GPT-4, Claude, Google Gemini, OpenRouter, Requesty) with battle-tested security tools to deliver intelligent, adaptive security assessments with comprehensive evidence capture.
+**GuardStrike** is an enterprise-grade AI-powered penetration testing automation framework that orchestrates a multi-agent engine over 8 pluggable AI providers (OpenAI, Claude, Gemini, OpenRouter, Requesty, Ollama, OpenAI-compatible, and keyless local gateways like Antigravity) and 50 battle-tested security tools. It delivers intelligent, adaptive assessments with cross-provider fallback, deterministic attack-chain detection, worst-first finding prioritization, an MCP server surface, and turnkey SARIF/DefectDojo/Slack reporting — all with full evidence traceability.
 
 [Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
@@ -35,7 +35,8 @@
 
 ### 🤖 Multi-Provider AI Intelligence
 
-- **7 AI Providers Supported**: OpenAI (GPT-4o), Anthropic (Claude), Google (Gemini), OpenRouter, **Requesty**, **Ollama (local)**, **OpenAI-compatible (vLLM, LM Studio, Together, Groq)**
+- **8 AI Providers Supported**: OpenAI (GPT-4o), Anthropic (Claude), Google (Gemini), OpenRouter, **Requesty**, **Ollama (local)**, **OpenAI-compatible (vLLM, LM Studio, Together, Groq)**, **Antigravity (keyless — via a local OpenAI-compatible proxy)**
+- **Cross-Provider Fallback + Budget Caps**: transient / model-not-found errors fail over across the configured provider chain; a per-run token and USD budget stops the run cleanly before overspend
 - **Plugin Provider Contract**: Third-party providers ship via `[project.entry-points."guardstrike.providers"]` — no fork required
 - **Multi-Agent Architecture**: Specialized AI agents (Planner, Tool Selector, Analyst, Reporter) plus debate triage roles (Red Advocate, Blue Advocate, Judge) and Visual Triage
 - **Multi-Agent Debate Triage**: Three-role red/blue/judge debate on ambiguous findings — F1 ≥ single-agent baseline +5pp
@@ -77,6 +78,12 @@
 - **Visual Evidence**: Screenshots captured per URL, attached to web findings
 - **Session Reconstruction**: Atomic-checkpointed `session_<id>.json` enables `--resume`
 
+### 🧠 Intelligent Analysis Engine
+
+- **Finding Deduplication**: merges duplicate findings across tools by vulnerability identity (CVE, else CWE + normalized title) per target, preserving every contributor's `tool:execution_id` so evidence traceability is never lost
+- **Deterministic Attack-Chain Detection**: a rule engine correlates per-target findings into known chains — SSRF→Cloud Metadata, SQLi→Data Breach, XSS→Account Takeover, IDOR+Weak-Auth→Horizontal Escalation, Path-Traversal/LFI→RCE, and more — rendered as a guaranteed **Attack Chains** report section (complements, not replaces, the LLM correlation)
+- **Worst-First Prioritization**: findings ordered by a transparent lexicographic key (severity → attack-chain membership → CVSS → corroboration count), surfaced as a **Prioritized Findings** triage table and used to order the technical narrative
+
 ### 🔄 Smart Workflow System (DSL v2)
 
 - **DAG Scheduler**: Steps with `depends_on` run in parallel up to `max_parallel_tools`
@@ -93,6 +100,14 @@
 - **DefectDojo**: Direct REST upload
 - **Slack**: Webhook posts with severity colour-coding
 - **Triggered via**: `guardstrike report --export sarif --export defectdojo --export slack`
+- **DefectDojo API push**: with `integrations.defectdojo` configured (base_url + engagement + `DEFECTDOJO_API_TOKEN`), `--export defectdojo` POSTs straight to the DefectDojo import-scan API; otherwise it writes the JSON for manual import
+
+### 🔌 MCP Server & CLI Experience
+
+- **MCP Server**: `guardstrike mcp` exposes workflows, reports, and the knowledge base over stdio for Claude Desktop / Claude Code — a read-only surface by default (`list_workflows`, `run_workflow`, `get_report`, `kb_query`); active/intrusive tools stay opt-in per call
+- **Discoverability**: `guardstrike tools list|info` (browse the 50-tool arsenal with install status + risk class), `guardstrike config show` (resolved config with secrets masked), and shell completion (`--install-completion`)
+- **Live Workflow Progress**: deterministic per-step progress lines (`▸ group 2/5 · 3/12 steps · scanning`) during long runs, without corrupting streamed tool output
+- **Clean CLI**: banner only on the bare invocation, config-driven session/report paths, and actionable not-found errors
 
 ### 🔒 Security & Compliance
 
@@ -169,7 +184,7 @@ GuardStrike can intelligently use these tools if installed:
 ### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/zakirkun/guardstrike.git
+git clone https://github.com/300squarefeet/GuardStrike.git
 cd guardstrike
 ```
 
@@ -321,6 +336,9 @@ OLLAMA_HOST=http://localhost:11434 python -m guardstrike workflow run --name rec
 
 # Any OpenAI-compatible endpoint (vLLM, LM Studio, Together, Groq)
 python -m guardstrike workflow run --name web_pentest --target example.com --provider openai_compatible
+
+# Antigravity — keyless, via a local Antigravity OpenAI-compatible proxy (default http://localhost:3000/v1)
+python -m guardstrike workflow run --name recon --target scanme.nmap.org --provider antigravity
 ```
 
 #### 6. Knowledge Base (RAG grounding)
@@ -663,7 +681,7 @@ We welcome contributions! Here's how:
 
 ```bash
 # Fork and clone
-git clone https://github.com/zakirkun/guardstrike.git
+git clone https://github.com/300squarefeet/GuardStrike.git
 cd guardstrike
 
 # Install dev dependencies
@@ -757,7 +775,7 @@ python -c "import yaml; yaml.safe_load(open('workflows/web_pentest.yaml'))"
 python -m guardstrike --help
 ```
 
-For more help, [open an issue](https://github.com/zakirkun/guardstrike/issues).
+For more help, [open an issue](https://github.com/300squarefeet/GuardStrike/issues).
 
 ---
 
@@ -781,8 +799,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support & Contact
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/zakirkun/guardstrike/issues)
-- **Discussions**: [Join community discussions](https://github.com/zakirkun/guardstrike/discussions)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/300squarefeet/GuardStrike/issues)
+- **Discussions**: [Join community discussions](https://github.com/300squarefeet/GuardStrike/discussions)
 - **Documentation**: [Read the docs](docs/)
 - **Security**: Report vulnerabilities privately to security@example.com
 
@@ -790,11 +808,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🌟 Star History
 
-<a href="https://github.com/zakirkun/guardstrike/stargazers">
+<a href="https://github.com/300squarefeet/GuardStrike/stargazers">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=zakirkun/guardstrike&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=zakirkun/guardstrike&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=zakirkun/guardstrike&type=Date" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=300squarefeet/GuardStrike&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=300squarefeet/GuardStrike&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=300squarefeet/GuardStrike&type=Date" />
   </picture>
 </a>
 

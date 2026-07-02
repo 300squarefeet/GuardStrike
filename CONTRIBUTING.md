@@ -13,7 +13,7 @@ Thank you for your interest in contributing to GuardStrike! We welcome contribut
 
 ### Reporting Bugs
 
-1. Check if the bug is already reported in [Issues](https://github.com/zakirkun/guardstrike/issues)
+1. Check if the bug is already reported in [Issues](https://github.com/300squarefeet/GuardStrike/issues)
 2. If not, create a new issue with:
    - Clear title and description
    - Steps to reproduce
@@ -23,7 +23,7 @@ Thank you for your interest in contributing to GuardStrike! We welcome contribut
 
 ### Suggesting Features
 
-1. Check [Discussions](https://github.com/zakirkun/guardstrike/discussions) for similar ideas
+1. Check [Discussions](https://github.com/300squarefeet/GuardStrike/discussions) for similar ideas
 2. Open a new discussion or issue describing:
    - The problem you're trying to solve
    - Your proposed solution
@@ -36,7 +36,7 @@ Thank you for your interest in contributing to GuardStrike! We welcome contribut
 
 ```bash
 # Fork and clone
-git clone https://github.com/zakirkun/guardstrike.git
+git clone https://github.com/300squarefeet/GuardStrike.git
 cd guardstrike
 
 # Create virtual environment
@@ -253,8 +253,8 @@ Instead:
 
 ## Getting Help
 
-- **Questions**: Use [Discussions](https://github.com/zakirkun/guardstrike/discussions)
-- **Bugs**: Open an [Issue](https://github.com/zakirkun/guardstrike/issues)
+- **Questions**: Use [Discussions](https://github.com/300squarefeet/GuardStrike/discussions)
+- **Bugs**: Open an [Issue](https://github.com/300squarefeet/GuardStrike/issues)
 - **Chat**: Join our Discord (link TBD)
 
 ## Recognition

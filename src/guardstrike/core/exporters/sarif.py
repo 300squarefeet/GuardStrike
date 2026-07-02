@@ -76,7 +76,7 @@ def export(memory: PentestMemory, *, tool_name: str = "guardstrike") -> dict[str
                 "tool": {
                     "driver": {
                         "name": tool_name,
-                        "informationUri": "https://github.com/zakirkun/guardstrike",
+                        "informationUri": "https://github.com/300squarefeet/GuardStrike",
                         "rules": list(rules.values()),
                     }
                 },
@@ -125,7 +125,7 @@ def _help_uri_for(f: Finding) -> str:
         return f"https://nvd.nist.gov/vuln/detail/{f.cve}"
     if f.cwe and f.cwe.upper().startswith("CWE-"):
         return f"https://cwe.mitre.org/data/definitions/{f.cwe[4:]}.html"
-    return "https://github.com/zakirkun/guardstrike"
+    return "https://github.com/300squarefeet/GuardStrike"
 
 
 def _rule_properties(f: Finding) -> dict[str, Any]:

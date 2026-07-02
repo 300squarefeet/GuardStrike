@@ -49,30 +49,21 @@ _VERSION = _get_version()
 
 banner = (
     r"""
-[bold red]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⣤⣤⣤⣤⣤⣤⠀⠀⠀[/bold red]
-[bold red]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⡄⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣠⣾⣿⣿⣶⣦⣄⡀[/bold red]
-[bold red]⠀⠀⠀⠀⠀⠀⠀⣀⣴⣾⣿⣿⣿⣿⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣤⡀[/bold red]
-[bold red]⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠋⠉[/bold red]     [bold cyan]  ██████╗ ██╗   ██╗ █████╗ ██████╗ ██████╗ ██╗ █████╗ ███╗   ██╗[/bold cyan]
-[bold red]⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠟⠛⢉⣉⣉⣉⣉⣉⡉⠙⠛⠻⠿⣿⠟⠋⠀⠀⠀⠀[/bold red]    [bold cyan] ██╔════╝ ██║   ██║██╔══██╗██╔══██╗██╔══██╗██║██╔══██╗████╗  ██║[/bold cyan]
-[bold red]⠀⠀⢀⣤⣌⣻⣿⣿⣿⣿⣿⣿⠟⢉⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⠄⠀⠀⠀⠀⠀⠀⠀[/bold red]    [bold cyan] ██║  ███╗██║   ██║███████║██████╔╝██║  ██║██║███████║██╔██╗ ██║[/bold cyan]
-[bold red]⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⠟⢁⣴⠿⠛⠋⣉⣁⣀⣀⣀⣉⡉⠛⠻⢿⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀[/bold red]    [bold cyan] ██║   ██║██║   ██║██╔══██║██╔══██╗██║  ██║██║██╔══██║██║╚██╗██║[/bold cyan]
-[bold red]⠀⢰⣿⣿⣿⣿⣿⣿⣿⠃⡴⠋⣁⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/bold red]     [bold cyan] ╚██████╔╝╚██████╔╝██║  ██║██║  ██║██████╔╝██║██║  ██║██║ ╚████║[/bold cyan]
-[bold red]⠀⣼⣿⣿⣿⣿⣿⣿⠃⠜⢠⣾⣿⣿⣿⣿⣿⡿⠿⠿⠛⠛⠛⠿⠿⢿⣆⠀⠀⠀⠀⠀⠀⠀⠀[/bold red]     [bold cyan]  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝[/bold cyan]
-[bold red]⠀⣿⣿⣿⣿⣿⣿⡟⠀⢰⣿⣿⣿⡿⠛⢋⣁⣤⣤⣴⣶⣶⣶⣶⣶⣤⣤⣀⣴⣾⠀⠀⠀⠀⠀⠀[/bold red]               [bold green]v"""
+[bold cyan] ██████╗ ██╗   ██╗ █████╗ ██████╗ ██████╗ ███████╗████████╗██████╗ ██╗██╗  ██╗███████╗[/bold cyan]
+[bold cyan]██╔════╝ ██║   ██║██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██║██║ ██╔╝██╔════╝[/bold cyan]
+[bold cyan]██║  ███╗██║   ██║███████║██████╔╝██║  ██║███████╗   ██║   ██████╔╝██║█████╔╝ █████╗  [/bold cyan]
+[bold blue]██║   ██║██║   ██║██╔══██║██╔══██╗██║  ██║╚════██║   ██║   ██╔══██╗██║██╔═██╗ ██╔══╝  [/bold blue]
+[bold blue]╚██████╔╝╚██████╔╝██║  ██║██║  ██║██████╔╝███████║   ██║   ██║  ██║██║██║  ██╗███████╗[/bold blue]
+[bold blue] ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝[/bold blue]
+
+  [bold red]⚡[/bold red] [bold white]AI-Powered Offensive Security Automation[/bold white]   [dim]v"""
     + _VERSION
-    + """[/bold green] [dim]- AI-Powered Penetration Testing Framework[/dim]
-[bold red]⠀⢿⣿⣿⣿⣿⣿⠇⠀⣿⣿⣿⣿⠃⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀[/bold red]
-[bold red]⠀⣶⣿⣿⣿⣿⣿⠀⢰⣿⣿⣿⡏⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀[/bold red]    [dim]AI Providers:[/dim]
-[bold red]⠀⣿⣿⣿⣿⣿⠇⠀⢸⣿⣿⣿⢀⣿⣿⣿⣿⣿⡿⠛⠋⠉⠉⠉⠛⢿⣿⣿⣿⠀⠀⠀⠀⠀⠀[/bold red]        • OpenAI GPT-4o  • Claude 3.5 Sonnet
-[bold red]⠀⣿⣿⣿⣿⠏⠀⠀⢸⣿⣿⣷⣄⡙⢿⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠈⢿⣿⣿⠀⠀⠀⠀⠀⠀[/bold red]        • Google Gemini 2.5 Pro  • OpenRouter
-[bold red]⣸⣿⡿⠟⠁⠀⠀⠀⢸⣿⣿⣿⣿⣿⣄⠙⢿⣿⣿⣿⣿⣷⣶⣤⡄⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀[/bold red]
-[bold red]⠉⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣧⠈⢻⣿⣿⣿⣿⣿⣿⡇⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀[/bold red]      [dim]Features:[/dim]
-[bold red]⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⢿⣿⣿⣿⣿⣿⣿⡀⠀⠙⠿⠀⠀⠀⠀⠀⠀[/bold red]        • 19 Security Tools     • Smart Workflows
-[bold red]⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⢸⣿⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀[/bold red]        • Evidence Capture    • Multi-Agent System
-[bold red]⠀⠀⠀⠀⠀⠀⠙⠻⠿⣿⣿⣿⣿⣿⡿⠿⠛⠁⠀⣿⣿⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀[/bold red]
-[bold red]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀[/bold red]      [italic dim]github.com/zakirkun/guardstrike[/italic dim]
-[bold red]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⢿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀⠀⠀⠀⠀[/bold red]
-[bold red]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠙⠛⠛⠛⠋⠉⠁⠀⠀⠀⠀⠀⠀⠀[/bold red]
+    + """[/dim]
+
+  [cyan]Providers[/cyan]  OpenAI · Claude · Gemini · OpenRouter · Requesty · Ollama · Antigravity
+  [cyan]Engine   [/cyan]  Multi-agent · 50 tools · Attack-chain detection · MCP server
+  [cyan]Reports  [/cyan]  Markdown · HTML · JSON · SARIF · DefectDojo · Slack
+  [italic dim]github.com/300squarefeet/GuardStrike[/italic dim]
 """
 )
 

@@ -30,7 +30,7 @@ def test_completion_flag_in_help():
 def test_new_subapps_no_banner():
     for args in (["tools", "--help"], ["config", "show", "--help"]):
         result = runner.invoke(app, args)
-        assert "zakirkun/guardstrike" not in result.output
+        assert "300squarefeet/GuardStrike" not in result.output
 
 
 def test_config_show_does_not_crash_on_bracket_values(tmp_path):
