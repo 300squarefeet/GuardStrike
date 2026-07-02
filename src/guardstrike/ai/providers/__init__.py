@@ -27,6 +27,7 @@ PROVIDERS: dict[str, str] = {
     "ollama": "guardstrike.ai.providers.ollama_provider.OllamaProvider",
     "openai_compatible": "guardstrike.ai.providers.openai_compatible_provider.OpenAICompatibleProvider",
     "antigravity": "guardstrike.ai.providers.antigravity_provider.AntigravityProvider",
+    "9router": "guardstrike.ai.providers.nine_router_provider.NineRouterProvider",
 }
 
 _ENTRY_POINT_GROUP = "guardstrike.providers"

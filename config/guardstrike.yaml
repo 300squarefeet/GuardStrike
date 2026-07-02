@@ -45,6 +45,11 @@ ai:
     # No API key needed — the proxy holds your Antigravity OAuth session.
     # Run a proxy (e.g. openai-proxy-for-antigravity) before selecting this provider.
     # api_key: null                      # only if your proxy enforces one (env: ANTIGRAVITY_API_KEY)
+  9router:
+    base_url: http://localhost:20128/v1   # local 9Router gateway (github.com/decolua/9router)
+    model: kr/claude-sonnet-4.5           # free tier; any 9Router model id works (see `guardstrike models`)
+    # No API key needed by default (9Router's REQUIRE_API_KEY is permissive locally).
+    # api_key: null                       # only if your gateway enforces one (env: NINEROUTER_API_KEY)
 
   # General AI Settings (applied to all providers)
   temperature: 0.2

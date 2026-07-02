@@ -10,7 +10,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-**GuardStrike** is an enterprise-grade AI-powered penetration testing automation framework that orchestrates a multi-agent engine over 8 pluggable AI providers (OpenAI, Claude, Gemini, OpenRouter, Requesty, Ollama, OpenAI-compatible, and keyless local gateways like Antigravity) and 50 battle-tested security tools. It delivers intelligent, adaptive assessments with cross-provider fallback, deterministic attack-chain detection, worst-first finding prioritization, an MCP server surface, and turnkey SARIF/DefectDojo/Slack reporting — all with full evidence traceability.
+**GuardStrike** is an enterprise-grade AI-powered penetration testing automation framework that orchestrates a multi-agent engine over 9 pluggable AI providers (OpenAI, Claude, Gemini, OpenRouter, Requesty, Ollama, OpenAI-compatible, and keyless local gateways like Antigravity and 9Router) and 50 battle-tested security tools. It delivers intelligent, adaptive assessments with cross-provider fallback, deterministic attack-chain detection, worst-first finding prioritization, an MCP server surface, and turnkey SARIF/DefectDojo/Slack reporting — all with full evidence traceability.
 
 [Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
@@ -35,7 +35,7 @@
 
 ### 🤖 Multi-Provider AI Intelligence
 
-- **8 AI Providers Supported**: OpenAI (GPT-4o), Anthropic (Claude), Google (Gemini), OpenRouter, **Requesty**, **Ollama (local)**, **OpenAI-compatible (vLLM, LM Studio, Together, Groq)**, **Antigravity (keyless — via a local OpenAI-compatible proxy)**
+- **9 AI Providers Supported**: OpenAI (GPT-4o), Anthropic (Claude), Google (Gemini), OpenRouter, **Requesty**, **Ollama (local)**, **OpenAI-compatible (vLLM, LM Studio, Together, Groq)**, **Antigravity (keyless — via a local OpenAI-compatible proxy)**, **9Router (keyless — local gateway to 40+ models with free tiers; `guardstrike models` lists the catalog)**
 - **Cross-Provider Fallback + Budget Caps**: transient / model-not-found errors fail over across the configured provider chain; a per-run token and USD budget stops the run cleanly before overspend
 - **Plugin Provider Contract**: Third-party providers ship via `[project.entry-points."guardstrike.providers"]` — no fork required
 - **Multi-Agent Architecture**: Specialized AI agents (Planner, Tool Selector, Analyst, Reporter) plus debate triage roles (Red Advocate, Blue Advocate, Judge) and Visual Triage
@@ -339,6 +339,9 @@ python -m guardstrike workflow run --name web_pentest --target example.com --pro
 
 # Antigravity — keyless, via a local Antigravity OpenAI-compatible proxy (default http://localhost:3000/v1)
 python -m guardstrike workflow run --name recon --target scanme.nmap.org --provider antigravity
+
+# 9Router — keyless, via a local 9Router gateway (default http://localhost:20128/v1); free-tier models
+python -m guardstrike workflow run --name recon --target scanme.nmap.org --provider 9router
 ```
 
 #### 6. Knowledge Base (RAG grounding)
