@@ -46,6 +46,10 @@ class ReporterAgent(BaseAgent):
         """
         self.log_action("GeneratingReport", f"Format: {format}")
 
+        from guardstrike.core.exploit_intel import enrich_findings
+
+        enrich_findings(self.memory.findings, self.config)
+
         # Generate all sections
         executive_summary = await self.generate_executive_summary()
         technical_findings = await self.generate_technical_findings()

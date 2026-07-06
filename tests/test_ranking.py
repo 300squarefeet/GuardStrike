@@ -92,4 +92,22 @@ def test_render_empty_and_table():
 
 def test_key_shape():
     k = finding_priority_key(_f(id="a", severity="high", cvss_score=7.5), {"a"})
-    assert k == (3, 1, 7.5, 1)
+    assert k == (3, 1, 0, 0.0, 7.5, 1)
+
+
+def test_public_exploit_boosts_ranking():
+    a = _f(id="a", severity="high", cvss_score=9.0)
+    b = _f(id="b", severity="high", cvss_score=5.0, exploit_available=True)
+    assert rank_findings([a, b], [])[0].id == "b"  # public exploit beats higher CVSS
+
+
+def test_exploitability_breaks_ties():
+    a = _f(id="a", severity="high", cvss_score=7.0, exploitability=1.0)
+    b = _f(id="b", severity="high", cvss_score=7.0, exploitability=3.5)
+    assert rank_findings([a, b], [])[0].id == "b"
+
+
+def test_rationale_mentions_public_exploit():
+    f = _f(id="a", severity="high", exploit_available=True)
+    r = priority_rationale(f, {})
+    assert "public exploit available" in r

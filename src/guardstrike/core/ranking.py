@@ -1,8 +1,9 @@
 """Deterministic finding prioritization.
 
 Orders findings worst-first via a lexicographic sort key:
-severity → attack-chain membership → CVSS → corroboration. Pure and
-deterministic — complements the LLM narrative; never mutates memory.
+severity → attack-chain membership → public exploit availability →
+exploitability → CVSS → corroboration. Pure and deterministic —
+complements the LLM narrative; never mutates memory.
 """
 
 from __future__ import annotations
@@ -33,8 +34,10 @@ def finding_priority_key(f: Finding, chain_ids: set[str]) -> tuple:
     return (
         severity_rank(f.severity),  # 1. severity dominates
         1 if f.id in chain_ids else 0,  # 2. within severity: chain member first
-        float(f.cvss_score or 0.0),  # 3. then higher CVSS
-        f.duplicate_count,  # 4. then more corroboration (SP4a)
+        1 if f.exploit_available else 0,  # 3. public exploit = strong boost
+        float(f.exploitability or 0.0),  # 4. ease of exploitation
+        float(f.cvss_score or 0.0),  # 5. then higher CVSS
+        f.duplicate_count,  # 6. then more corroboration (SP4a)
     )
 
 
@@ -50,6 +53,8 @@ def priority_rationale(f: Finding, chain_lookup: dict[str, list[str]]) -> str:
     names = chain_lookup.get(f.id, [])
     if names:
         parts.append("part of " + " & ".join(names))
+    if f.exploit_available:
+        parts.append("public exploit available")
     if f.duplicate_count > 1:
         parts.append(f"corroborated by {f.duplicate_count} tool executions")
     return "; ".join(parts)
